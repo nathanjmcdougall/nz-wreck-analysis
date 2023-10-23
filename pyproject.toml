@@ -36,7 +36,7 @@ dev = [
   # These four need to be synced with the versions in .pre-commit-config.yaml
   # Also see the check section
   "black==23.7.0",
-  "pylint==3.0.0a7",
+  "pylint==3.0.2",
   "ruff==0.0.285",
   "doc8==1.1.1",
   # ^^^
