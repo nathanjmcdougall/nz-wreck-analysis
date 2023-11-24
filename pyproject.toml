@@ -43,7 +43,7 @@ dev = [
 ]
 check = [
   "pre-commit",
-  "mypy==1.5.1", # Sync with the version in .pre-commit-config.yaml
+  "mypy==1.7.1", # Sync with the version in .pre-commit-config.yaml
 ]
 test = ["pytest", "coverage[toml]", "pytest-cov"]
 notebook = ["ipykernel", "IPython"]
