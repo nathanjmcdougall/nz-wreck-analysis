@@ -23,11 +23,16 @@ description = "An analysis of shipwrecks in New Zealand."
 authors = [
   { name = "Nathan McDougall", email = "nathan.j.mcdougall@gmail.com" },
 ]
-license = { text = "BSD-3-Clause" }
 readme = "README.md"
 requires-python = ">=3.8"
 dynamic = ["version"]
-dependencies = []
+dependencies = [
+  "geopandas",
+  "pandas",
+  "pandera[geopandas,hypothesis]",
+  "pydantic",
+  "strenum",
+]
 
 [project.optional-dependencies]
 dev = [
@@ -36,7 +41,6 @@ dev = [
   # These four need to be synced with the versions in .pre-commit-config.yaml
   # Also see the check section
   "black==23.7.0",
-  "pylint==3.0.0a7",
   "ruff==0.0.285",
   "doc8==1.1.1",
   # ^^^
@@ -46,7 +50,17 @@ check = [
   "mypy==1.5.1", # Sync with the version in .pre-commit-config.yaml
 ]
 test = ["pytest", "coverage[toml]", "pytest-cov"]
-notebook = ["ipykernel", "IPython"]
+notebook = [
+  "ipykernel",
+  "ipython",
+  "iprogress",
+  "jupyter",
+  "ipywidgets",
+  "ydata-profiling",
+  "folium",
+  "matplotlib",
+  "mapclassify",
+]
 
 [project.urls]
 "Source Code" = "https://github.com/nathanjmcdougall/nz_wreck_analysis"
@@ -74,29 +88,24 @@ mypy_path = ["src"]
 src = ["src"]
 select = ["ALL"]
 ignore = [
-  "F403", # We often use * imports in __init__.py files, and other uses will be checked by pylint
+  "D203", # Conflicts with other rule
+  "D212", # Conflicts with other rule
+  "D204", # Bad rule
+  "D100", # Too much
 ]
-line-length = 88 # Sync with pylint
+line-length = 88 # Sync with black, doc8
 target-version = "py311"
 
 [tool.ruff.per-file-ignores]
 "**/__init__.py" = [
   "D104", # No docstrings required in empty __init__.py files.
 ]
-
-[tool.pylint.messages_control]
-max-line-length = 88 # Sync with ruff and black
-disable = [
-  "import-error",               # When pre-commits are running we don't necessarily have everything installed.
-  "line-too-long",              # Already checked by Ruff
-  "missing-function-docstring", # We don't require docstrings for tests
-  "too-few-public-methods",     # We often have small classes for this package for abstractions
-  "useless-object-inheritance", # For mypy explicit inheritance from object is useful
+"src/scripts/**/*.py" = [
+  "INP001", # No need for __init__.py files in the scripts folder.
 ]
-ignore-paths = ["^.venv/.*$", "src/.*/_version.py$"]
 
 [tool.black]
-line-length = 88 # Sync with pylint
+line-length = 88 # Sync with ruff
 target-version = ['py38', 'py39', 'py310', 'py311']
 exclude = '''
 (
@@ -105,6 +114,9 @@ exclude = '''
   | setup.py
 )
 '''
+
+[tool.doc8]
+max-line-length = 88 # sync with ruff
 
 [tool.pytest]
 console_output_style = ['progress']
@@ -131,6 +143,3 @@ exclude_lines = [
   # Don't complain about abstract methods, they aren't run:
   "@(abc\\.)?abstractmethod",
 ]
-
-[tool.doc8]
-max-line-length = 88
